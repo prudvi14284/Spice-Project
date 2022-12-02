@@ -1,14 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Spice.Data;
-using Spice.Models;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Spice.Data;
+using Spice.Models;
+using Spice.Utility;
 
 namespace Spice.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    //[Authorize(Roles = SD.ManagerUser)]
     public class CouponController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -18,19 +23,16 @@ namespace Spice.Areas.Admin.Controllers
             _db = db;
         }
 
-        //Index Coupon
         public async Task<IActionResult> Index()
         {
             return View(await _db.Coupon.ToListAsync());
         }
 
-        //GET - CREATE Coupon
         public IActionResult Create()
         {
             return View();
         }
 
-        //POST Action Method - CREATE Coupon
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Coupon coupons)
@@ -58,7 +60,8 @@ namespace Spice.Areas.Admin.Controllers
             return View(coupons);
         }
 
-        //GET Action Method - Edit Coupon
+
+        //GET Edit Coupon
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,7 +76,6 @@ namespace Spice.Areas.Admin.Controllers
             return View(coupon);
         }
 
-        //POST Action Method - EDIT Coupon
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Coupon coupons)
@@ -113,7 +115,7 @@ namespace Spice.Areas.Admin.Controllers
             return View(coupons);
         }
 
-        //GET Action Method - DETAILS Coupon
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -131,7 +133,7 @@ namespace Spice.Areas.Admin.Controllers
             return View(coupon);
         }
 
-        //GET Action Method - DELETE Coupon
+        //GET Delete Coupon
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -146,7 +148,6 @@ namespace Spice.Areas.Admin.Controllers
             return View(coupon);
         }
 
-        //POST Action Method - DELETE Coupons
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -158,4 +159,3 @@ namespace Spice.Areas.Admin.Controllers
         }
     }
 }
-

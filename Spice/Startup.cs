@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Spice.Data;
+using Spice.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,10 +32,20 @@ namespace Spice
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddSingleton<IEmailSender, EmailSender>();
+
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
+        }
+
+        private object AddDefaultTokenProviders()
+        {
+            throw new NotImplementedException();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

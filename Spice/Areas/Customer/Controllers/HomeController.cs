@@ -1,10 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Spice.Data;
 using Spice.Models;
+using Spice.Models.ViewModels;
+using Spice.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Spice.Areas.Customer.Controllers
@@ -12,16 +18,41 @@ namespace Spice.Areas.Customer.Controllers
     [Area("Customer")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext db)
         {
-            _logger = logger;
+            _db = db;
         }
 
-        public IActionResult Index()
+        //private readonly ILogger<HomeController> _logger;
+
+        //public HomeController(ILogger<HomeController> logger)
+        //{
+        //    _logger = logger;
+        //}
+
+        public async Task<IActionResult> Index()
         {
-            return View();
+            IndexViewModel IndexVM = new IndexViewModel()
+            {
+                MenuItem = await _db.MenuItem.Include(m => m.Category).Include(m => m.SubCategory).ToListAsync(),
+                Category = await _db.Category.ToListAsync(),
+                Coupon = await _db.Coupon.Where(c => c.IsActive == true).ToListAsync()
+
+            };
+
+            //var claimsIdentity = (ClaimsIdentity)User.Identity;
+            //var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            //if (claim != null)
+            //{
+            //    var cnt = _db.ShoppingCart.Where(u => u.ApplicationUserId == claim.Value).ToList().Count;
+            //    HttpContext.Session.SetInt32(SD.ssShoppingCartCount, cnt);
+            //}
+
+
+            return View(IndexVM);
         }
 
         public IActionResult Privacy()

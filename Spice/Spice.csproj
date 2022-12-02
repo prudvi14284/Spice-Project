@@ -9,6 +9,8 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20221130062220_addSubCategoryToDatabase.cs" />
     <Compile Remove="Data\Migrations\20221130062220_addSubCategoryToDatabase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20221202074053_addMoreFieldsToDatabase.cs" />
+    <Compile Remove="Data\Migrations\20221202074053_addMoreFieldsToDatabase.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
